@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<!-- 네이스페이스는 무엇을 가르치고 있는지 더 알아보기 -->
+<mapper namespace="com.pmgroup.isglory.mappers.boardMapper">
+	<!-- 게시판 리스트 출력 -->
+	<select id="selectList" resultType="boardVO">
+		SELECT
+			idx, title,              <!-- 번호, 제목 --> 
+			contents, hit_cnt,  <!-- 내용, 조회수 -->
+			writer                   <!-- 작성자 -->
+		FROM
+		exBoard
+	</select>
+<!-- 게시판 입력 -->
+	<insert id="insertBoard" parameterType="BoardVO">
+		INSERT into exBoard (title, contents, hit_cnt, writer) <!-- 제목, 내용, 조회수, 작성자 --> 
+		values (#{title},#{contents},0,#{writer}) 
+	</insert>
+<!-- 상세페이지 출력 -->
+	<select id="selectOne" parameterType="int" resultType="boardVO">
+		SELECT
+			idx, title,              <!-- 번호, 제목 --> 
+			contents, hit_cnt,  <!-- 내용, 조회수 -->
+			writer                   <!-- 작성자 -->
+		FROM
+			exBoard
+		WHERE
+			idx = #{idx}
+	</select> 
+<!-- 수정 -->
+	<update id="updateBoard" parameterType="boardVO">
+		UPDATE exBoard
+		SET
+			title = #{title}, contents = #{contents},<!-- 제목, 내용 -->
+			hit_cnt = #{hit_cnt}, writer = #{writer} <!-- 조회수, 작성자 -->
+		WHERE
+			idx = #{idx}
+	</update> 
+<!-- 삭제 -->
+	<delete id="deleteBoard" parameterType="int">
+	DELETE FROM exBoard
+	WHERE
+		idx = #{idx}
+	</delete>
+</mapper>
+
