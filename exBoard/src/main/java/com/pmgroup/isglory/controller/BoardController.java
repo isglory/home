@@ -10,24 +10,55 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.pmgroup.isglory.common.ConfigurePages;
 import com.pmgroup.isglory.dao.BoardVO;
 import com.pmgroup.isglory.service.BoardService;
 
 //모의 게시판
 @Controller
 public class BoardController {
+
 	Logger log = Logger.getLogger(this.getClass());
+	
 	@Inject
 	private BoardService service;
-
-	// 리스트
+	
+	/*
+	 * 리스트 페이지
+	 *  TODO 페이징 처리
+	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String boardList(Model model) throws Exception {
-		log.debug("리스트페이지 로그 테스트");
-
-		List<BoardVO> data = service.selecList();
+	public String boardList(Model model, HttpServletRequest request) throws Exception {
+		//페이징 관련
+		ConfigurePages page = new ConfigurePages();
+		//현재 페이지가 없을때 처음페이지 or 페이지 번호 설정
+		int pageNum = (request.getQueryString()==null)? 1 : Integer.parseInt(request.getQueryString());		
+		
+		int numPerPage = 10; //시작은 10개씩 보여줌
+		
+		page.setTotalCount(service.getTotalPage()); //총게시글 설정
+		
+		page.setPageNum(pageNum-1); //현재 페이지를 페이지 객체에 지정 쿼리를 위해 -1
+		
+		page.setNumPerPage(numPerPage); //초기 10개로 세팅 한 페이지에 몇개씩 
+		
+		page.setCurrentBlock(pageNum); //현재 페이지 -> 현재블록 계산
+		
+		page.setLastBlock(page.getTotalCount()); //전체게시글 -> 마지막블록설정
+		page.prevNext(pageNum); //현재페이지로 이전, 다음 페이지 설정
+		page.setStartPage(page.getCurrentBlock()); //현재 블럭기준 시작 페이지설정
+		page.setEndPage(page.getLastBlock(), page.getCurrentBlock()); //현재 블록기준 마지막 페이지
+		
+		//List<BoardVO> data = service.selecListByPage(page.getPageNum()*10, page.getNumPerPage());
+		List<BoardVO> data = service.selecListByPage(page);
 		model.addAttribute("boardList", data);
+		model.addAttribute("page", page);
+		
+		//기존코드
+		//List<BoardVO> data = service.selecList();
+		//model.addAttribute("boardList", data);
 
 		return "list";
 	}
@@ -96,7 +127,7 @@ public class BoardController {
 
 	// 삭제
 	@RequestMapping(value = "/del", method = RequestMethod.GET)
-	public String del(HttpServletRequest request) {
+	public String del(HttpServletRequest request) throws Exception {
 		String pageNum = request.getQueryString();
 		System.out.println(pageNum);
 		service.delete(pageNum);

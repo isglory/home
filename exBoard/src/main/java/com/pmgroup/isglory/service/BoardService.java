@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
+import com.pmgroup.isglory.common.ConfigurePages;
 import com.pmgroup.isglory.dao.BoardDao;
 import com.pmgroup.isglory.dao.BoardVO;
 
@@ -30,7 +31,18 @@ public class BoardService {
 		return dao.updateBoard(data);
 	}
 	//글 삭제
-	public int delete(String pageNum) {
+	public int delete(String pageNum) throws Exception {
 		return dao.delteBoard(pageNum);
 	}
+	//페이징 관련 시작, 전체 레코드 수
+	public int getTotalPage() throws Exception {
+		return dao.getTotalPage();
+	}
+	//페이징 처리된 게시판 목록
+	public List<BoardVO> selecListByPage(ConfigurePages page) throws Exception{
+		return dao.getListByPage(page);
+	}
+	
+	
+	
 }
