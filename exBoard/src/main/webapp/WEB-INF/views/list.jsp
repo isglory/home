@@ -7,15 +7,17 @@
 <head>
 <meta charset="utf-8">
 <title>게시판 목록</title>
-<%--css--%>
-<style>
-
-</style>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+	function page(idx){
+		var pageNum = idx;
+		location.href = '/list?'+pageNum;
+	}
+</script>
 
 </head>
 <body>
 <h2>목록</h2>
-
 <table>
       <thead>
           <tr>
@@ -38,6 +40,22 @@
             <td><input type="button" name="" value="글작성" onclick="location.href='/writeform'"></td>
           </tr>
       </tbody>
+      <tfoot>
+      	<tr>
+      		<td colspan="4">
+      			<c:if test="${page.prev}">
+      				<a href="javascript:page(${page.getStartPage()-1})">&laquo</a>
+      			</c:if>
+      			<c:forEach begin="${page.getStartPage()}" end="${page.getEndPage()}" var="idx">
+ 					<a href="javascript:page(${idx});">${idx}</a>			
+      			</c:forEach>
+      			<c:if test="${page.next}">
+      				<a href="javascript:page(${page.getEndPage()+1})">&raquo</a>
+      			</c:if>
+      		
+      		</td>
+      	</tr>
+      </tfoot>
   </table>
 
 </body>

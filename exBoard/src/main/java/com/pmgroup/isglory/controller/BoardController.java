@@ -31,19 +31,28 @@ public class BoardController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String boardList(Model model, HttpServletRequest request) throws Exception {
-		//페이징 관련
-		ConfigurePages page = new ConfigurePages();
+		/*
+		 * 페이징 관련
+		 * 생성자("페이징처리할 테이블",한페이지에 표시할 게시물수)
+		 */
+		ConfigurePages page = new ConfigurePages("exBoard",10);
+		
 		//현재 페이지가 없을때 처음페이지 or 페이지 번호 설정
-		int pageNum = (request.getQueryString()==null)? 1 : Integer.parseInt(request.getQueryString());		
+		int pageNum = (request.getQueryString()==null)? 
+					   1 : Integer.parseInt(request.getQueryString());		
+		/*
+		 * 테이블명
+		 * 한페이지에 표시될 리스트 개수
+		 * 페이지 1로 처리
+		 * 
+		 * 
+		 */
 		
-		int numPerPage = 10; //시작은 10개씩 보여줌
 		
-		page.setTotalCount(service.getTotalPage()); //총게시글 설정
 		
+		page.setTotalCount(service.getTotalPage()); //총게시글 개수 
 		page.setPageNum(pageNum-1); //현재 페이지를 페이지 객체에 지정 쿼리를 위해 -1
-		
-		page.setNumPerPage(numPerPage); //초기 10개로 세팅 한 페이지에 몇개씩 
-		
+		page.setNumPerPage(10); //한 페이지에 표시될 게시글 수 
 		page.setCurrentBlock(pageNum); //현재 페이지 -> 현재블록 계산
 		
 		page.setLastBlock(page.getTotalCount()); //전체게시글 -> 마지막블록설정
@@ -51,8 +60,8 @@ public class BoardController {
 		page.setStartPage(page.getCurrentBlock()); //현재 블럭기준 시작 페이지설정
 		page.setEndPage(page.getLastBlock(), page.getCurrentBlock()); //현재 블록기준 마지막 페이지
 		
-		//List<BoardVO> data = service.selecListByPage(page.getPageNum()*10, page.getNumPerPage());
 		List<BoardVO> data = service.selecListByPage(page);
+		
 		model.addAttribute("boardList", data);
 		model.addAttribute("page", page);
 		
