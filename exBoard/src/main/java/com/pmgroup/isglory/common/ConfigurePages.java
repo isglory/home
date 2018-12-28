@@ -1,13 +1,6 @@
 package com.pmgroup.isglory.common;
 
-import javax.inject.Inject;
-
-import com.pmgroup.isglory.service.BoardService;
-
-
 public class ConfigurePages {
-		
-	private String boardName; //페이징할 게시판명
 	
 	private int totalCount; //전체 게시물 수
 	private int pageNum; //현재 페이지 번호
@@ -154,10 +147,9 @@ public class ConfigurePages {
 	}	
 	
 	//페이지 세팅
-	public ConfigurePages setting(
-		String tblName, int numPerPage, int totalCount, int numPerBlock, int pageNum){
+	public ConfigurePages setting(int numPerPage, int totalCount, int numPerBlock, int pageNum){
 		this.totalCount=totalCount; //총게시글 개수 
-		this.pageNum=(pageNum-1)*10; //현재 페이지를 페이지 객체에 지정 쿼리를 위해 -1
+		this.pageNum=(pageNum-1)*numPerPage; //현재 페이지를 페이지 객체에 지정 쿼리를 위해 -1
 		this.numPerPage=numPerPage; //한 페이지에 표시될 게시글 수 
 		this.setCurrentBlock(pageNum); //현재 페이지 -> 현재블록 계산	
 		this.setLastBlock(totalCount); //전체게시글 -> 마지막블록설정

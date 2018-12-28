@@ -46,8 +46,7 @@ public class BoardService {
 		return dao.getListByPage(page);
 	}
 	//페이징
-	public ConfigurePages setPage(
-			String tblName,int numPerPage,int totalPage,int numPerBlock, int pageNum) {	
-			return page.setting(tblName, numPerPage, totalPage, numPerBlock, pageNum);
+	public ConfigurePages setPage(int numPerPage,int totalPage,int numPerBlock, int pageNum) {	
+			return page.setting(numPerPage, totalPage, numPerBlock, pageNum);
 		}
 }

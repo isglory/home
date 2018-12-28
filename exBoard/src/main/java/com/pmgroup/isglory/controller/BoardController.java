@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -31,11 +32,11 @@ public class BoardController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String boardList(Model model, HttpServletRequest request) throws Exception {
 		
-		//현재 페이지가 없을때 처음페이지 or 페이지 번호 설정
-		int pageNum = (request.getQueryString()==null)? 
+		//현재 페이지가 없을때 처음페이지 or 페이지 번호 설정 
+		int pageNum = (request.getQueryString()==null || request.getQueryString().equals("0"))? 
 					   1 : Integer.parseInt(request.getQueryString());		
-		
-		ConfigurePages page = service.setPage("exBoard",10,service.getTotalPage(),10,pageNum);
+		//페이지 설정(1-페이지당 개수 2-전체 게시글수 3-페이지블록수 4-현재 페이지번호)
+		ConfigurePages page = service.setPage(10,service.getTotalPage(),10,pageNum);
 		List<BoardVO> data = service.selecListByPage(page);
 		
 		model.addAttribute("boardList", data);
@@ -52,20 +53,14 @@ public class BoardController {
 
 	// 글 저장
 	@RequestMapping(value = "/writeform", method = RequestMethod.POST)
-	public String writeSave(Model model, String title, String writer, String contents) throws Exception {
+	public String writeSave(Model model, @ModelAttribute ("board") BoardVO board) throws Exception {
 
-		BoardVO board = new BoardVO();
-		// 리퀘스트 데이터 vo에 맵핑
-		board.setTitle(title); // 제목
-		board.setWriter(writer); // 작성자
-		board.setContents(contents); // 컨텐츠
-		board.setHit_cnt(0); // 조회수, 글이 작성되는 시점
 		service.insertBoard(board);
 
 		List<BoardVO> data = service.selecList();
 		model.addAttribute("boardList", data);
 
-		return "list";
+		return "redirect:list";
 	}
 
 	/*
