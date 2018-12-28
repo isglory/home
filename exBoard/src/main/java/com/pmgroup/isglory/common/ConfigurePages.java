@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import com.pmgroup.isglory.service.BoardService;
 
+
 public class ConfigurePages {
 		
 	private String boardName; //페이징할 게시판명
@@ -21,11 +22,11 @@ public class ConfigurePages {
 	private boolean prev; //이전 페이지 화살표
 	private boolean next; //다음페이지 화살표
 
-	//객체 생성시 페이징할 게시판 선택
-	public ConfigurePages(String boardName, int numPerPage) {
-		this.boardName = boardName;
-		this.numPerPage = numPerPage;
-	}
+//	//객체 생성시 페이징할 게시판 선택
+//	public ConfigurePages(String boardName, int numPerPage) {
+//		this.boardName = boardName;
+//		this.numPerPage = numPerPage;
+//	}
 	
 	//전체 페이지수 계산
 	public int calcPage(int totalCount, int numPerPage) {
@@ -63,10 +64,6 @@ public class ConfigurePages {
 
 	public int getPageNum() {
 		return pageNum;
-	}
-
-	public void setPageNum(int pageNum) {
-		this.pageNum = pageNum*10; //mysql limit 쿼리.. *10
 	}
 
 	public int getNumPerPage() {
@@ -156,6 +153,19 @@ public class ConfigurePages {
 		 */
 	}	
 	
+	//페이지 세팅
+	public ConfigurePages setting(
+		String tblName, int numPerPage, int totalCount, int numPerBlock, int pageNum){
+		this.totalCount=totalCount; //총게시글 개수 
+		this.pageNum=(pageNum-1)*10; //현재 페이지를 페이지 객체에 지정 쿼리를 위해 -1
+		this.numPerPage=numPerPage; //한 페이지에 표시될 게시글 수 
+		this.setCurrentBlock(pageNum); //현재 페이지 -> 현재블록 계산	
+		this.setLastBlock(totalCount); //전체게시글 -> 마지막블록설정
+		this.prevNext(pageNum); //현재페이지로 이전, 다음 페이지 설정
+		this.setStartPage(this.getCurrentBlock()); //현재 블럭기준 시작 페이지설정
+		this.setEndPage(this.getLastBlock(), getCurrentBlock()); //현재 블록기준 마지막 페이지
+		return this;
+	}
 	
 	
 	

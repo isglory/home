@@ -14,6 +14,9 @@ import com.pmgroup.isglory.dao.BoardVO;
 public class BoardService {
 	@Inject
 	BoardDao dao;
+	
+	ConfigurePages page = new ConfigurePages();
+	
 	//게시판 목록
 	public List<BoardVO> selecList() throws Exception{
 		return dao.selectList();
@@ -42,7 +45,9 @@ public class BoardService {
 	public List<BoardVO> selecListByPage(ConfigurePages page) throws Exception{
 		return dao.getListByPage(page);
 	}
-	
-	
-	
+	//페이징
+	public ConfigurePages setPage(
+			String tblName,int numPerPage,int totalPage,int numPerBlock, int pageNum) {	
+			return page.setting(tblName, numPerPage, totalPage, numPerBlock, pageNum);
+		}
 }

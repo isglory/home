@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.pmgroup.isglory.common.ConfigurePages;
 import com.pmgroup.isglory.dao.BoardVO;
@@ -27,47 +26,20 @@ public class BoardController {
 	
 	/*
 	 * 리스트 페이지
-	 *  TODO 페이징 처리
+	 * 페이징 처리
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String boardList(Model model, HttpServletRequest request) throws Exception {
-		/*
-		 * 페이징 관련
-		 * 생성자("페이징처리할 테이블",한페이지에 표시할 게시물수)
-		 */
-		ConfigurePages page = new ConfigurePages("exBoard",10);
 		
 		//현재 페이지가 없을때 처음페이지 or 페이지 번호 설정
 		int pageNum = (request.getQueryString()==null)? 
 					   1 : Integer.parseInt(request.getQueryString());		
-		/*
-		 * 테이블명
-		 * 한페이지에 표시될 리스트 개수
-		 * 페이지 1로 처리
-		 * 
-		 * 
-		 */
 		
-		
-		
-		page.setTotalCount(service.getTotalPage()); //총게시글 개수 
-		page.setPageNum(pageNum-1); //현재 페이지를 페이지 객체에 지정 쿼리를 위해 -1
-		page.setNumPerPage(10); //한 페이지에 표시될 게시글 수 
-		page.setCurrentBlock(pageNum); //현재 페이지 -> 현재블록 계산
-		
-		page.setLastBlock(page.getTotalCount()); //전체게시글 -> 마지막블록설정
-		page.prevNext(pageNum); //현재페이지로 이전, 다음 페이지 설정
-		page.setStartPage(page.getCurrentBlock()); //현재 블럭기준 시작 페이지설정
-		page.setEndPage(page.getLastBlock(), page.getCurrentBlock()); //현재 블록기준 마지막 페이지
-		
+		ConfigurePages page = service.setPage("exBoard",10,service.getTotalPage(),10,pageNum);
 		List<BoardVO> data = service.selecListByPage(page);
 		
 		model.addAttribute("boardList", data);
 		model.addAttribute("page", page);
-		
-		//기존코드
-		//List<BoardVO> data = service.selecList();
-		//model.addAttribute("boardList", data);
 
 		return "list";
 	}
