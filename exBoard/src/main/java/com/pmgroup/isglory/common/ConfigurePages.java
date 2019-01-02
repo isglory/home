@@ -10,18 +10,32 @@ public class ConfigurePages {
 	private int endPage; //현재 블록 마지막 페이지
 	
 	private int lastBlock; //마지막페이지 블록
-	private int numPerBlock = 10; //한 블록당 페이지수 초기값  10으로 설정 
+	private int numPerBlock; //한 블록당 페이지수 초기값  10으로 설정 
 	
 	private boolean prev; //이전 페이지 화살표
 	private boolean next; //다음페이지 화살표
-
-	//전체 페이지수 계산
-	public int calcPage(int totalCount, int numPerPage) {
-		int totalPage = totalCount/numPerPage; ////전체 게시글 수 / 한 페이지당 게시글 수
-		if(totalCount%numPerPage >0) {totalPage++;} // 12/10 = 1.2 .. 2페이지 필요
+	
+	private int totalPage;
+	
+	public int getTotalPage() {
 		return totalPage;
 	}
-	
+
+	public void setTotalPage(int totalCount, int numPerPage) {
+		this.totalPage = totalCount/numPerPage; ////전체 게시글 수 / 한 페이지당 게시글 수
+		if(totalCount%numPerPage >0) {totalPage++;} // 12/10 = 1.2 .. 2페이지 필요
+	}
+
+	//검색어
+	private String keyword;
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 	
 	/*
 	 * 이전, 다음 버튼 설정
@@ -31,7 +45,11 @@ public class ConfigurePages {
 	public void prevNext(int pageNum) {
 		if(pageNum<=numPerBlock) {
 			setPrev(false);
-			setNext(true);
+			if(totalPage>numPerBlock) {
+				setNext(true);				
+			}else {
+				setNext(false);
+			}
 		}else if(getLastBlock() == getCurrentBlock()) {
 			setPrev(true);
 			setNext(false);
@@ -80,7 +98,7 @@ public class ConfigurePages {
 	//현재블록 마지막 페이지 설정
 	public void setEndPage(int lastBlock, int currentBlock) {
 		if(lastBlock == currentBlock) {
-			this.endPage = calcPage(getTotalCount(), getNumPerPage());
+			this.endPage = totalPage;
 		}else {
 			this.endPage = getStartPage()+(numPerBlock-1);
 		}
@@ -141,15 +159,24 @@ public class ConfigurePages {
 	}	
 	
 	//페이지 세팅
-	public ConfigurePages setting(int numPerPage, int totalCount, int numPerBlock, int pageNum){
+	public ConfigurePages setting(int numPerPage, int totalCount, int numPerBlock, int pageNum, String keyword){
+		
+		
 		this.totalCount=totalCount; //총게시글 개수 
+		this.numPerPage=numPerPage; //한 페이지에 표시될 게시글 수
+		this.numPerBlock=numPerBlock;
+		//쿼리 계산을 위해
 		this.pageNum=(pageNum-1)*numPerPage; //현재 페이지를 페이지 객체에 지정 쿼리를 위해 -1
-		this.numPerPage=numPerPage; //한 페이지에 표시될 게시글 수 
+		this.setTotalPage(totalCount, numPerPage);//전체레코드수와 페이지에 표시될 레코드수로 전체 페이지 개수구함
 		this.setCurrentBlock(pageNum); //현재 페이지 -> 현재블록 계산	
 		this.setLastBlock(totalCount); //전체게시글 -> 마지막블록설정
-		this.prevNext(pageNum); //현재페이지로 이전, 다음 페이지 설정
+		
 		this.setStartPage(this.getCurrentBlock()); //현재 블럭기준 시작 페이지설정
 		this.setEndPage(this.getLastBlock(), getCurrentBlock()); //현재 블록기준 마지막 페이지
+		
+		this.prevNext(pageNum); //현재페이지로 이전, 다음 페이지 설정
+		this.setKeyword(keyword);
+		
 		return this;
 	}
 	

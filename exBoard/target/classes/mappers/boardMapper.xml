@@ -49,11 +49,13 @@
 		idx = #{idx}
 	</delete>
 	<!-- 페이징 관련 -->
-	<select id="selectTotalRow" resultType="Integer">
+	<select id="selectTotalRow" resultType="Integer" parameterType="string">
 		SELECT
 			COUNT(idx)
 		FROM 
 			exBoard
+		WHERE
+			title LIKE CONCAT('%', #{keyword}, '%')
 	</select>
 	<!-- 페이징 리스트 -->
 	<select id="selectListByPage" parameterType="com.pmgroup.isglory.common.ConfigurePages" resultType="boardVO">
@@ -63,6 +65,8 @@
 			writer                   <!-- 작성자 -->
 		FROM
 			exBoard
+		WHERE
+			title LIKE CONCAT('%',#{keyword},'%')
 		ORDER BY
 			idx desc
 		LIMIT

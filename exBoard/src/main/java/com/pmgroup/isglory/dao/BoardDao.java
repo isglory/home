@@ -42,8 +42,8 @@ public class BoardDao {
 	 * 총 게시물 수
 	 * .select 언떤 메서드를 사용해야 하는지 확인
 	 */
-	public int getTotalPage() throws Exception {
-		return sqlSession.selectOne(NameSpace+".selectTotalRow");
+	public int getTotalPage(String keyword) throws Exception {
+		return sqlSession.selectOne(NameSpace+".selectTotalRow",keyword);
 	}
 	//페이징 처리한 리스트
 	public List<BoardVO> getListByPage(ConfigurePages page) throws Exception {

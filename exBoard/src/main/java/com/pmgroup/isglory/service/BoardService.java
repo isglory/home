@@ -38,15 +38,15 @@ public class BoardService {
 		return dao.delteBoard(pageNum);
 	}
 	//페이징 관련 시작, 전체 레코드 수
-	public int getTotalPage() throws Exception {
-		return dao.getTotalPage();
+	public int getTotalPage(String keyword) throws Exception {
+		return dao.getTotalPage(keyword);
 	}
 	//페이징 처리된 게시판 목록
 	public List<BoardVO> selecListByPage(ConfigurePages page) throws Exception{
 		return dao.getListByPage(page);
 	}
 	//페이징
-	public ConfigurePages setPage(int numPerPage,int totalPage,int numPerBlock, int pageNum) {	
-			return page.setting(numPerPage, totalPage, numPerBlock, pageNum);
+	public ConfigurePages setPage(int numPerPage,int totalPage,int numPerBlock, int pageNum, String keyword) {	
+			return page.setting(numPerPage, totalPage, numPerBlock, pageNum, keyword);
 		}
 }

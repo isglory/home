@@ -31,10 +31,11 @@ public class BoardController {
 	 * 페이징 처리
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String boardList(Model model, HttpServletRequest request, 
-							@RequestParam(defaultValue="1") int pageNum) throws Exception {
-		//페이지 설정(1-페이지당 개수 2-전체 게시글수 3-페이지블록수 4-현재 페이지번호)
-		ConfigurePages page = service.setPage(10,service.getTotalPage(),10,pageNum);
+	public String boardList(Model model,
+							@RequestParam(defaultValue="1") int pageNum,
+							@RequestParam(defaultValue="") String keyword) throws Exception {
+		//페이지 설정(1-페이지당 개수 2-전체 게시글수 3-페이지블록수 4-현재 페이지번호 5-검색어)
+		ConfigurePages page = service.setPage(10,service.getTotalPage(keyword),10,pageNum,keyword);
 		List<BoardVO> data = service.selecListByPage(page);
 		
 		model.addAttribute("boardList", data);

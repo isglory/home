@@ -11,7 +11,11 @@
 <script type="text/javascript">
 	function page(idx){
 		var pageNum = idx;
-		location.href = '/list?pageNum='+pageNum;
+		location.href = '/list?pageNum='+pageNum+'&keyword=${page.keyword}';
+	}
+	function serch(){
+		var keyword = document.getElementById("keyword").value;
+		location.href = '/list?keyword='+keyword;
 	}
 </script>
 
@@ -38,6 +42,7 @@
           </c:forEach>
           <tr>
             <td><input type="button" name="" value="글작성" onclick="location.href='/writeform'"></td>
+            <td><input type="text" id="keyword"><input type="button" value="검색" onclick="serch()"></td>
           </tr>
       </tbody>
       <tfoot>
