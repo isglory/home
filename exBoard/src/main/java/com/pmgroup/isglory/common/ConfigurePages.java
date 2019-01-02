@@ -15,12 +15,6 @@ public class ConfigurePages {
 	private boolean prev; //이전 페이지 화살표
 	private boolean next; //다음페이지 화살표
 
-//	//객체 생성시 페이징할 게시판 선택
-//	public ConfigurePages(String boardName, int numPerPage) {
-//		this.boardName = boardName;
-//		this.numPerPage = numPerPage;
-//	}
-	
 	//전체 페이지수 계산
 	public int calcPage(int totalCount, int numPerPage) {
 		int totalPage = totalCount/numPerPage; ////전체 게시글 수 / 한 페이지당 게시글 수
@@ -35,7 +29,7 @@ public class ConfigurePages {
 	 * 마지막블록- 다음버튼 비활성
 	 */
 	public void prevNext(int pageNum) {
-		if(pageNum<numPerBlock) {
+		if(pageNum<=numPerBlock) {
 			setPrev(false);
 			setNext(true);
 		}else if(getLastBlock() == getCurrentBlock()) {

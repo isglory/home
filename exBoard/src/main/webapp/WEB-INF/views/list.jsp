@@ -11,7 +11,7 @@
 <script type="text/javascript">
 	function page(idx){
 		var pageNum = idx;
-		location.href = '/list?'+pageNum;
+		location.href = '/list?pageNum='+pageNum;
 	}
 </script>
 

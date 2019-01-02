@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.pmgroup.isglory.common.ConfigurePages;
 import com.pmgroup.isglory.dao.BoardVO;
@@ -30,11 +31,8 @@ public class BoardController {
 	 * 페이징 처리
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String boardList(Model model, HttpServletRequest request) throws Exception {
-		
-		//현재 페이지가 없을때 처음페이지 or 페이지 번호 설정 
-		int pageNum = (request.getQueryString()==null || request.getQueryString().equals("0"))? 
-					   1 : Integer.parseInt(request.getQueryString());		
+	public String boardList(Model model, HttpServletRequest request, 
+							@RequestParam(defaultValue="1") int pageNum) throws Exception {
 		//페이지 설정(1-페이지당 개수 2-전체 게시글수 3-페이지블록수 4-현재 페이지번호)
 		ConfigurePages page = service.setPage(10,service.getTotalPage(),10,pageNum);
 		List<BoardVO> data = service.selecListByPage(page);
@@ -53,30 +51,26 @@ public class BoardController {
 
 	// 글 저장
 	@RequestMapping(value = "/writeform", method = RequestMethod.POST)
-	public String writeSave(Model model, @ModelAttribute ("board") BoardVO board) throws Exception {
+	public String writeSave(Model model, @ModelAttribute BoardVO board) throws Exception {
 
 		service.insertBoard(board);
-
-		List<BoardVO> data = service.selecList();
-		model.addAttribute("boardList", data);
 
 		return "redirect:list";
 	}
 
 	/*
-	 * 글 수정 request 파라미터로 작성했음
+	 * 글 수정
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(Model model, HttpServletRequest request) throws Exception {
-		// TODO 수정할 객체 내용 설정
-		BoardVO boardVO = new BoardVO();
-		boardVO.setIdx(Integer.parseInt(request.getParameter("idx"))); // 글번호
-		boardVO.setContents(request.getParameter("contents")); // 내용
-		boardVO.setTitle(request.getParameter("title")); // 제목
-		boardVO.setHit_cnt(Integer.parseInt(request.getParameter("hit_cnt"))); // 조회수 , TODO 조회수가 늘어나도록 구현
-		boardVO.setWriter(request.getParameter("writer")); // 작성자
+	public String update(@ModelAttribute BoardVO boardVO,Model model) throws Exception {
+		// @ModelAttribute 적용전 코드
+//		BoardVO boardVO = new BoardVO();
+//		boardVO.setIdx(Integer.parseInt(request.getParameter("idx"))); // 글번호
+//		boardVO.setContents(request.getParameter("contents")); // 내용
+//		boardVO.setTitle(request.getParameter("title")); // 제목
+//		boardVO.setHit_cnt(Integer.parseInt(request.getParameter("hit_cnt"))); // 조회수 , TODO 조회수가 늘어나도록 구현
+//		boardVO.setWriter(request.getParameter("writer")); // 작성자
 
-		System.out.println(boardVO.toString());
 
 		service.updateBoard(boardVO);
 
