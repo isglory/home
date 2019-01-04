@@ -15,7 +15,7 @@ public class ConfigurePages {
 	private boolean prev; //이전 페이지 화살표
 	private boolean next; //다음페이지 화살표
 	
-	private int totalPage;
+	private int totalPage; //전체페이지
 	
 	public int getTotalPage() {
 		return totalPage;
@@ -97,8 +97,8 @@ public class ConfigurePages {
 	}
 	//현재블록 마지막 페이지 설정
 	public void setEndPage(int lastBlock, int currentBlock) {
-		if(lastBlock == currentBlock) {
-			this.endPage = totalPage;
+		if(lastBlock <= currentBlock) {
+			this.endPage = totalPage == 0 ?1 : totalPage;
 		}else {
 			this.endPage = getStartPage()+(numPerBlock-1);
 		}
@@ -160,8 +160,7 @@ public class ConfigurePages {
 	
 	//페이지 세팅
 	public ConfigurePages setting(int numPerPage, int totalCount, int numPerBlock, int pageNum, String keyword){
-		
-		
+			
 		this.totalCount=totalCount; //총게시글 개수 
 		this.numPerPage=numPerPage; //한 페이지에 표시될 게시글 수
 		this.numPerBlock=numPerBlock;
@@ -179,9 +178,4 @@ public class ConfigurePages {
 		
 		return this;
 	}
-	
-	
-	
-	
-	
 }
