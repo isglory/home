@@ -98,7 +98,7 @@ public class ConfigurePages {
 	//현재블록 마지막 페이지 설정
 	public void setEndPage(int lastBlock, int currentBlock) {
 		if(lastBlock <= currentBlock) {
-			this.endPage = totalPage == 0 ?1 : totalPage;
+			this.endPage = totalPage == 0 ? 1 : totalPage;
 		}else {
 			this.endPage = getStartPage()+(numPerBlock-1);
 		}
